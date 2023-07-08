@@ -23,10 +23,13 @@ combined <- rewatched %>%
               mutate(tv_show_name = trimws(tv_show_name,"both"))) %>%
   # extract month and year
   mutate(year = as.numeric(substr(updated_at,1,4))
-         ,monthNumber=as.numeric(substr(updated_at,6,7)) )
+         ,monthNumber=as.numeric(substr(updated_at,6,7)) 
+         ,quarter = case_when(monthNumber %in% c(1,2,3) ~ 1
+                              ,monthNumber %in% c(4,5,6) ~ 2
+                              ,monthNumber %in% c(7,8,9) ~ 3
+                              ,monthNumber %in% c(10,11,12) ~ 4))
 
 # not sure - there's one show without a name?!
 table(combined$tv_show_name[is.na(combined$tv_show_name)])
-
 
 write.csv(combined,paste0(directory,"cleanedTVdata.csv"),row.names = FALSE)
